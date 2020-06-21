@@ -8,6 +8,8 @@ pipeline {
 			steps {
 				//sh "mvn --version"
 				echo "Build"
+				echo "$PATH"
+				echo "BUILD ID - $env.BUILD_ID"
 			}
 		
 		}
