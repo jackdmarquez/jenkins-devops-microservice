@@ -36,6 +36,35 @@ pipeline {
 				echo "Integration Test"
 			}
 		}
+		stage('Package') {
+			steps {
+				sh "mvn package -DskipTests"
+				echo "Package"
+			}
+		}
+
+
+		stage ('Build Docker image') {
+			steps {
+				//"docker build -t jackod/currency-exchange:$env.BUILD_TAG"
+				script {
+					dockerImage= docker.build("jackod/currency-exchange:${env.BUILD_TAG}")
+				}
+			}
+
+		}
+		stage ('Push Docker image') {
+			steps {
+				script {
+					docker.withRegistry('','dockerHub') {
+						dockerImage.push();
+						dockerImage.push('latest');
+					}
+				}
+			}
+
+		}
+
 	} 
 	post {
 		always {
